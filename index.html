@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random 'A' Word Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            border: 1px solid #e2e8f0;
+        }
+        .card-container:hover {
+            transform: translateY(-5px);
+        }
+        .content-box {
+            min-height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+            transition: opacity 0.5s ease-in-out;
+            padding: 1rem;
+        }
+        .content-box.meaning {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+        .button {
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.2s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .next-button {
+            background-color: #4c51bf;
+            color: #fff;
+        }
+        .next-button:hover {
+            background-color: #434190;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .meaning-button {
+            background-color: #cbd5e0;
+            color: #2d3748;
+        }
+        .meaning-button:hover {
+            background-color: #a0aec0;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="card-container">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Random 'A' Word Generator</h1>
+        <div id="content-box" class="content-box bg-gray-50 rounded-lg mb-6 shadow-inner">
+            <span id="display-text">Click 'Next Word' to begin!</span>
+        </div>
+        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <button id="next-button" class="button next-button">Next Word</button>
+            <button id="meaning-button" class="button meaning-button" disabled>Meaning</button>
+        </div>
+    </div>
+
+    <script>
+        const words = [
+            { word: "Abate", meaning: "Become less intense or widespread" },
+            { word: "Abattoir", meaning: "A place where animals are slaughtered for consumption as food" },
+            { word: "Abbot", meaning: "The superior of a monastery" },
+            { word: "Abbreviation", meaning: "To reduce to a shorter form intended to stand for the whole" },
+            { word: "Abdicate", meaning: "To give up one's authority or throne" },
+            { word: "Abdication", meaning: "Act of giving up (renouncing) the throne" },
+            { word: "Aberration", meaning: "Deviation from the right course" },
+            { word: "Ablution", meaning: "The act of washing oneself" },
+            { word: "Abnegate", meaning: "To refuse or deny oneself" },
+            { word: "Abolish", meaning: "Formally put an end to a system, practice, or institution" },
+            { word: "Aboriginal", meaning: "Existing in a land from the earliest times or from before the arrival of colonists" },
+            { word: "Aborigines", meaning: "The original inhabitants/natives of a country" },
+            { word: "Abridge", meaning: "To shorten a piece of writing without losing the sense" },
+            { word: "Abridgement", meaning: "A shortened version of a larger work" },
+            { word: "Abrogate", meaning: "Cancel or do away with (a law or agreement)" },
+            { word: "Abscond", meaning: "To go away suddenly and secretly in order to escape from somewhere" },
+            { word: "Absolution", meaning: "Formal forgiveness of a person's sins" },
+            { word: "Absurd", meaning: "Wildly unreasonable, illogical or ridiculous" },
+            { word: "Accelerate", meaning: "To increase the speed" },
+            { word: "Accolade", meaning: "Any award, honour or laudatory notice" },
+            { word: "Accomplice", meaning: "A person who helps another to commit a crime or to do something morally wrong" },
+            { word: "Accord", meaning: "Be harmonious or consistent with" },
+            { word: "Accountant", meaning: "A person whose profession is to keep accounts" },
+            { word: "Acerbic", meaning: "Sharp, bitter, or harsh in temper, language, etc." },
+            { word: "Acoustics", meaning: "The scientific study of sound" },
+            { word: "Acquit", meaning: "To decide and state officially in court that somebody is not guilty of a crime" },
+            { word: "Acrobat", meaning: "An entertainer who performs difficult physical feats" },
+            { word: "Acronym", meaning: "An abbreviation formed from the initial letters of other words and pronounced as a word" },
+            { word: "Acrophobia", meaning: "Fear of great heights" },
+            { word: "Act", meaning: "To do something // to behave in a particular way // to perform a part in a play/film/function" },
+            { word: "Actionable", meaning: "Giving cause for legal action" },
+            { word: "Activate", meaning: "Make a machine active or operative" },
+            { word: "Acumen", meaning: "The ability to make good judgments take quick decisions // Sharpness and accuracy of judgement" },
+            { word: "Addict", meaning: "A person who is physically dependent on a substance/harmful drugs" },
+            { word: "Adhere", meaning: "Believe in and follow the practices of" },
+            { word: "Adolescence", meaning: "The period between the beginning of puberty and adulthood" },
+            { word: "Adonis", meaning: "An extremely beautiful young man" },
+            { word: "Adorable", meaning: "Very attractive and easy to feel love for" },
+            { word: "Adulterate", meaning: "Make impure by adding inferior substances" },
+            { word: "Adventurous", meaning: "Willing to take risks and try new ideas" },
+            { word: "Advocate", meaning: "A person who supports or speaks in favour of something" },
+            { word: "Aerial", meaning: "Growing/existing/living in air" },
+            { word: "Aesthetic", meaning: "Concerned with beauty or the appreciation of beauty" },
+            { word: "Agenda", meaning: "A list of items to be discussed at a meeting" },
+            { word: "Aggrandize", meaning: "To increase the importance, position or wealth" },
+            { word: "Aggressive", meaning: "Always ready to attack or quarrel // One who is hostile and violent" },
+            { word: "Agnostic", meaning: "One who is not sure about God's existence" },
+            { word: "Agony", meaning: "Extreme mental or physical suffering" },
+            { word: "Album", meaning: "A blank book for keeping a collection of photographs, stamps or pictures" },
+            { word: "Alchemy", meaning: "Study of chemistry in a medieval fashion" },
+            { word: "Algaecide", meaning: "A substance for killing algae" },
+            { word: "Algophobia", meaning: "Fear of pain" },
+            { word: "Alien", meaning: "A person belonging to a foreign country // different from what you are used to // A fictional being from another world" },
+            { word: "Alimony", meaning: "The money paid to former wife, husband or partner when the marriage is ended" },
+            { word: "Allegory", meaning: "A story, play, picture, etc. In which each character/event is a symbol representing an idea/a quality, such as truth, evil, death, etc." },
+            { word: "Alliteration", meaning: "Words that begin with the same letter, syllable or sound // Repetition of an initial sound in two or more words of a line" },
+            { word: "Alluvium", meaning: "Soil deposited by flowing water" },
+            { word: "Alma Mater", meaning: "The school or college in which one has been educated" },
+            { word: "Almanac", meaning: "A publication containing astronomical or meteorological annual calendar that contains important dates and time" },
+            { word: "Alpinism", meaning: "Mountain climbing" },
+            { word: "Altar", meaning: "A table or flat surface where offerings are made to a deity" },
+            { word: "Altimeter", meaning: "Instrument that measures the altitude of the land surface" },
+            { word: "Altitude", meaning: "The height above sea level" },
+            { word: "Altruist", meaning: "Someone who makes charitable donations intended to the welfare of other people" },
+            { word: "Alumnus", meaning: "A former student of a school, college or university" },
+            { word: "Amateur", meaning: "One who plays for pleasure rather than as a profession // A person who is neither well experienced nor professional" },
+            { word: "Amaxophobia", meaning: "Fear of riding in a car" },
+            { word: "Ambassador", meaning: "A diplomatic representative in another country" },
+            { word: "Ambidextrous", meaning: "Able to use the left hand and right hand equally well" },
+            { word: "Ambience", meaning: "The character and atmosphere of a place" },
+            { word: "Ambiguous", meaning: "Capable of being understood in either of two or more possible senses, and therefore not definite" },
+            { word: "Ambivalent", meaning: "Having or showing both good and bad feelings" },
+            { word: "Ambivert", meaning: "One who has the qualities like shyness and openness at the same time" },
+            { word: "Amble", meaning: "Walk or move at a slow, relaxed pace // To walk aimlessly" },
+            { word: "Ameliorate", meaning: "Make (something bad or unsatisfactory) better" },
+            { word: "Amenable", meaning: "Readily reacting to suggestions and influences // willing to be guided or controlled" },
+            { word: "Amicable", meaning: "Someone who is friendly and good natured" },
+            { word: "Amicably", meaning: "In a friendly and peaceable manner" },
+            { word: "Amnesia", meaning: "A partial or total loss of memory" },
+            { word: "Amnesty", meaning: "official pardon // the formal act of liberating someone" },
+            { word: "Amoral", meaning: "Not following any moral rules and not caring about right/wrong" },
+            { word: "Amphibians", meaning: "that can live both on land and in water" },
+            { word: "Amputee", meaning: "A person who has had one or more limbs removed" },
+            { word: "Anagram", meaning: "A word or a phrase formed by rearranging a different word" },
+            { word: "Analogy", meaning: "A similarity between like features of two things, on which a comparison may be based" },
+            { word: "Analysis", meaning: "Detailed examination of something" },
+            { word: "Anarchist", meaning: "A person who believes that laws and governments are not necessary // A person who believes in or tries to bring about a state of lawlessness" },
+            { word: "Anarchy", meaning: "A situation in a country, an organization, etc. In which there is no government, order/control" },
+            { word: "Anatomy", meaning: "The branch of science concerned with the bodily structure of humans, animals, and other living organisms" },
+            { word: "Anchor", meaning: "A person who presents a radio/television programme" },
+            { word: "Ancient", meaning: "Belonging to long past" },
+            { word: "Anecdote", meaning: "A short, interesting or amusing story about a real person or an event" },
+            { word: "Anesthetist", meaning: "A medical specialist who administers drugs for relieving pain during surgery" },
+            { word: "Anile", meaning: "Like a weak old woman" },
+            { word: "Animosity", meaning: "A strong dislike/hostility" },
+            { word: "Annihilate", meaning: "To destroy completely" },
+            { word: "Anniversary", meaning: "The date on which an event happened in some previous year" },
+            { word: "Annuity", meaning: "A fixed sum paid annually" },
+            { word: "Anomaly", meaning: "Departure from common rule" },
+            { word: "Anonymous", meaning: "Whose names are not known // An unknown author" },
+            { word: "Anorexia", meaning: "Obsessive desire to lose weight by refusing to eat" },
+            { word: "Anthology", meaning: "A collection of poems, stories, etc. that have been written by different people and published together in a book" },
+            { word: "Anthropologist", meaning: "One who studies the evolution of mankind" },
+            { word: "Anthropology", meaning: "The study of human race, especially of its origin, development, customs and beliefs" },
+            { word: "Anticipate", meaning: "Look forward to" },
+            { word: "Antidote", meaning: "A medicine to nullify the effect of poison or another medicine" },
+            { word: "Antipathy", meaning: "Strong dislike between two persons // A deep-seated feeling of aversion" },
+            { word: "Antiquarian", meaning: "One who studies/deals antique things" },
+            { word: "Antithesis", meaning: "The exact opposite" },
+            { word: "Antonym", meaning: "Words which are opposite in meaning" },
+            { word: "Apartheid", meaning: "A policy that segregates people on the basis of race // Policy of racial discrimination" },
+            { word: "Apartment", meaning: "A set of rooms forming one residence in a building" },
+            { word: "Apathetic", meaning: "Showing or feeling no interest, enthusiasm, or concern" },
+            { word: "Apathy", meaning: "The feeling of not being interested in or enthusiastic" },
+            { word: "Aphasia", meaning: "Loss of speech due to medical problem" },
+            { word: "Apiary", meaning: "A place where bees are kept" },
+            { word: "Apologize", meaning: "To express regret for something that one has done wrong" },
+            { word: "Apostasy", meaning: "The state of having rejected your religious beliefs or your political party or a cause" },
+            { word: "Apostate", meaning: "A person who renounces a religious or political belief or principle" },
+            { word: "Apostle", meaning: "A pioneer of a reform movement" },
+            { word: "Appalling", meaning: "Causing shock or dismay" },
+            { word: "Appertain", meaning: "Be appropriate or applicable" },
+            { word: "Applicant", meaning: "A person who formally requests something, especially a job" },
+            { word: "Appraisal", meaning: "Estimation of a thing's worth" },
+            { word: "Appreciate", meaning: "To rise in value" },
+            { word: "Apprentice", meaning: "A person who works for an expert to learn a trade" },
+            { word: "Aquaphobia", meaning: "Being afraid of water or being near water" },
+            { word: "Aquarium", meaning: "A glass tank where fish and water plants are kept" },
+            { word: "Aquatic", meaning: "Animals and plants growing or living in, or near water" },
+            { word: "Arable", meaning: "Suitable for growing crops" },
+            { word: "Arbitrary", meaning: "Based on chance rather than on reason or a plan" },
+            { word: "Arbitrator", meaning: "A person who is chosen to settle a disagreement" },
+            { word: "Archaeologist", meaning: "One who studies human antiquities" },
+            { word: "Archaeology", meaning: "The study of human history and prehistory through the excavation of sites" },
+            { word: "Archaic", meaning: "No longer in use" },
+            { word: "Archipelago", meaning: "A large body of water with many islands" },
+            { word: "Archive", meaning: "The place where public, government or historical records are kept" },
+            { word: "Ardour", meaning: "Zeal; burning enthusiasm; passion" },
+            { word: "Arena", meaning: "A place where fights take place // A place or scene of activity, debate, or conflict" },
+            { word: "Aristocracy", meaning: "A government by the nobles/government by person of highest social order" },
+            { word: "Arsenal", meaning: "A military structure where arms and ammunition and other military equipment are stored" },
+            { word: "Arson", meaning: "Deliberately and maliciously set something (buildings usually) on fire" },
+            { word: "Arsonist", meaning: "A criminal who illegally sets fire to property" },
+            { word: "Arsonphobia", meaning: "Fear of fire" },
+            { word: "Articulate", meaning: "Good at expressing ideas, feelings clearly in words" },
+            { word: "Articulation", meaning: "Ability to communicate effectively and express oneself clearly in writing and speaking" },
+            { word: "Artist", meaning: "One who practice one of the fine arts" },
+            { word: "Ascetic", meaning: "One who denies oneself ordinary bodily pleasures" },
+            { word: "Ascribe", meaning: "To attribute a cause or characteristic to something" },
+            { word: "Askance", meaning: "Nations that do not trust each other/look upon each other" },
+            { word: "Assailant", meaning: "A person who physically attacks another" },
+            { word: "Assassin", meaning: "A person who kills somebody, especially for political reasons" },
+            { word: "Assent", meaning: "To agree to a request/an idea/a suggestion" },
+            { word: "Assertive", meaning: "The quality of being politely firm and demanding" },
+            { word: "Astrologer", meaning: "One who tells future from the stars" },
+            { word: "Astrology", meaning: "The science of foretelling events by mapping stars" },
+            { word: "Astronaut", meaning: "A person engaged in or trained for spaceflight" },
+            { word: "Astronomy", meaning: "The scientific study of celestial bodies like sun, moon, stars, planets, etc." },
+            { word: "Asylum", meaning: "Place that provides refuge // a hospital where people who were mentally ill could be cared for, often for a long time" },
+            { word: "Atheist", meaning: "One who doesn't believe in the existence of God" },
+            { word: "Atonement", meaning: "An action of making amends for a wrong or injury" },
+            { word: "Audible", meaning: "That can be heard clearly" },
+            { word: "Audit", meaning: "An official inspection of a company's, or individual's, accounts" },
+            { word: "Auditor", meaning: "One who makes an official examination of accounts/financial records" },
+            { word: "Auditorium", meaning: "A building where an audience sits" },
+            { word: "Austere", meaning: "Severe in his manner" },
+            { word: "Authentic", meaning: "Made or done in the traditional or original way // Something that is genuine" },
+            { word: "Autobiography", meaning: "The life history of a person written by himself" },
+            { word: "Autocracy", meaning: "A system of government of a country in which one person has complete power" },
+            { word: "Autocrat", meaning: "A ruler who has complete power" },
+            { word: "Autonomy", meaning: "A self-governing country or region" },
+            { word: "Autopsy", meaning: "An official examination of a dead body by a doctor in order to discover the cause of death" },
+            { word: "Avalanche", meaning: "A mass of snow, ice and rocks falling rapidly down a mountainside" },
+            { word: "Avant-Garde", meaning: "The group, especially in the arts, regarded as being the most experimental" },
+            { word: "Avarice", meaning: "Insatiable desire for wealth" },
+            { word: "Avaricious", meaning: "Having an extreme desire for wealth" },
+            { word: "Aviary", meaning: "A place for keeping the birds in a confined space" },
+            { word: "Avicide", meaning: "Killing of birds" },
+            { word: "Avidity", meaning: "Keen interest or enthusiasm" },
+            { word: "Avoid", meaning: "To keep away from" },
+            { word: "Axiom", meaning: "A rule/principle that most people believe to be true" },
+        ];
+        
+        const nextButton = document.getElementById('next-button');
+        const meaningButton = document.getElementById('meaning-button');
+        const contentBox = document.getElementById('content-box');
+        const displayText = document.getElementById('display-text');
+
+        let currentWordIndex = -1;
+        let isMeaningVisible = false;
+
+        function getRandomWord() {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            currentWordIndex = randomIndex;
+            displayText.textContent = words[currentWordIndex].word;
+            isMeaningVisible = false;
+            contentBox.classList.remove('meaning');
+            meaningButton.disabled = false;
+        }
+
+        function toggleMeaning() {
+            if (currentWordIndex !== -1) {
+                if (isMeaningVisible) {
+                    displayText.textContent = words[currentWordIndex].word;
+                    contentBox.classList.remove('meaning');
+                    isMeaningVisible = false;
+                } else {
+                    displayText.textContent = words[currentWordIndex].meaning;
+                    contentBox.classList.add('meaning');
+                    isMeaningVisible = true;
+                }
+            }
+        }
+        
+        nextButton.addEventListener('click', () => {
+             // Add a small delay for a smoother transition
+             contentBox.style.opacity = 0;
+             setTimeout(() => {
+                 getRandomWord();
+                 contentBox.style.opacity = 1;
+             }, 300);
+        });
+
+        meaningButton.addEventListener('click', () => {
+            // Add a small delay for a smoother transition
+             contentBox.style.opacity = 0;
+             setTimeout(() => {
+                 toggleMeaning();
+                 contentBox.style.opacity = 1;
+             }, 300);
+        });
+
+    </script>
+</body>
+</html>
